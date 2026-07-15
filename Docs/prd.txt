@@ -1,0 +1,191 @@
+Excellent. This design note adds the crucial granular detail we need. I've integrated every point into a refined and comprehensive PRD. Consider this the final blueprint.
+
+Here is the updated **Product Requirements Document (PRD) for Cosmic Cadets**, fully aligned with the design note and the implemented marketing landing page.
+
+---
+
+## **Product Requirements Document: Cosmic Cadets**
+
+**Document Version:** 2.4
+**Date:** July 15, 2026
+**Location:** Pune, India
+**Changelog (2.4):** Mission Map redesigned as a playful cosmic trail with per-mission kids/rocket art vignettes (`missions/mission-01`…`10.png`); shared mission catalog in code.
+**Changelog (2.3):** Landing hero is cosmos adventure art (`cosmos-hero.png`); `earth-bright.png` powers Mission 1 globe; Mission 1 UX redesigned. Docs synced.
+**Changelog (2.2):** Shipped bright (light) theme with Dark/Bright toggle on landing + Settings; preference persists app-wide.
+**Changelog (2.1):** Added marketing landing as the app entry, CTA → game-start routing, in-page landing nav, and clarified first-time vs returning cadet flow.
+
+### ## 1. Vision & Core Loop
+
+**"Cosmic Cadets"** is a playful, educational 2D game for kids, optimized for a tablet-first experience. It transforms complex astronomy into simple, interactive missions. The entire user interface is **diegetic**, meaning UI elements exist within the game world (e.g., cadet IDs, star maps, mission reports) to maximize immersion.
+
+Our guiding mantra remains: **Play → Discover → Understand.**
+
+---
+
+### ## 2. Target Audience & Platform
+
+* **Primary Audience:** Kids aged 5–15.
+* **Platform:** Tablet-first (iOS/Android), with mobile-friendly and desktop versions available.
+* **Age Bands:** The game will adapt its difficulty and UI based on a one-time age selection during onboarding:
+    * **Little Sparks (5–7):** Focus on pure play and discovery.
+    * **Star Gazers (8–11):** The core experience, balancing play and learning.
+    * **Galaxy Explorers (12–15):** Introduces optional challenges and deeper concepts.
+
+---
+
+### ## 3. Marketing Landing (App Entry)
+
+The app opens on a **marketing landing page** (`#landing`) before the diegetic game shell. This is the public entry for first-time and returning players.
+
+#### **3.1 Purpose**
+
+* Introduce the brand (**Cosmic Cadets: A Starlight Saga**) and mantra.
+* Explain who the game is for (ages 5–15) and what they’ll play (ten short missions with guide **Nova**).
+* Convert interest into play via a primary **Launch Mission** CTA.
+
+#### **3.2 Landing Sections**
+
+1. **Hero:** Brand-forward wordmark, short promise (“Play. Discover. Understand.”), supporting copy, **cosmos hero art** (kids in a rocket with Earth, solar system, galaxies, nebulae — `cosmos-hero.png`), and Launch CTA.
+2. **Age bands (“Choose your flight path”):** Little Sparks / Star Gazers / Galaxy Explorers with age ranges and short descriptions.
+3. **Missions preview (“Ten missions · One star map”):** Featured missions **01–03**, an explicit **04–09 bridge** (series continues / unlocks on the star map), and finale **10 · The Big Zoom Out**.
+4. **Closing CTA:** “Ready for takeoff, Cadet?” with Launch again.
+5. **Footer:** Brand + mantra.
+
+#### **3.3 Header Nav (Landing Only)**
+
+* **Cadets** — Smooth-scrolls to the age-bands section (does **not** change route/hash).
+* **Missions** — Smooth-scrolls to the missions preview section.
+* **Theme toggle** — Switches Dark ↔ Bright colors; preference is saved and applies across the app.
+* **Launch Mission** — Enters the game (see §3.4).
+* No separate “About” link; brand story lives in the hero and closing CTA.
+
+#### **3.4 Launch Mission → Game Start**
+
+| Player state | Destination after Launch |
+| :--- | :--- |
+| **No Cadet profile** (first visit / cleared save) | `#onboarding` — Cadet Registration |
+| **Has Cadet profile** (returning) | `#home` — Mission Map |
+
+Landing and onboarding are **public routes** (no profile required). All other game routes require a saved profile; otherwise the player is sent to registration.
+
+Default empty URL / unknown fragments resolve to `#landing` so entry and browser history stay predictable (including Safari).
+
+---
+
+### ## 4. Onboarding & Player Profile
+
+The "Cadet Registration" is a one-time setup process, reached from the landing **Launch Mission** CTA when no profile exists.
+
+1.  **Data Capture:**
+    * **Callsign:** Player's chosen name.
+    * **Interstellar Comms Link:** Guardian's email address. A clear note will state that for users under 13, guardian consent is required for progress emails.
+2.  **Age Band Selection:** The player selects their age group (5–7, 8–11, 12–15). This choice is critical as it tunes the entire game experience.
+3.  **Cadet ID:** Upon completion, the player is issued a **"Cosmic Cadet ID."** This serves as their profile screen, featuring a customizable avatar and visible slots for mission badges.
+4.  **Post-registration:** Successful submit navigates to the **Mission Map** (`#home`). Onboarding’s submit control may also be labeled “Launch Mission”; in that context it means “finish registration and open the map,” not “start mission 1.”
+
+---
+
+### ## 5. Gameplay Flow & Controls
+
+#### **5.0 End-to-End Player Journey**
+
+**Landing → (Register if needed) → Mission Map → Mission → Mission Report → Mission Map**
+
+Back controls (e.g. “← Mission Map”) return to `#home` and must work reliably across browsers including Safari (hash + history navigation; UI above game canvas).
+
+#### **5.1 Navigation**
+
+* **Mission Map:** The central hub is a stylized **cosmic trail** (not a plain numbered grid). Stops zigzag along a glowing spine; each stop shows mission-specific art of the smiling cadets and rocket set in that mission’s sky (day/night Earth, moon phases, constellations, etc.), plus title, concept label, teaser, and badge/score status. Players launch missions from these illustrated stops.
+* **Profile / Settings:** Reachable from the Mission Map header; each provides a back path to the map.
+
+#### **5.2 In-Mission Experience**
+
+* **Structure:** Each mission consists of 1–3 short, focused tasks, each lasting between 30 and 120 seconds.
+* **Guidance:** **Nova**, our friendly alien guide, provides voice-over and text prompts throughout. Strong visual cues guide the player.
+* **Controls:** Gameplay is restricted to simple, intuitive actions: **Tap, Drag, and Slider movements only.** No complex or "twitch" controls.
+* **Session Design:** Total mission time is designed for short play sessions (3–10 minutes). Progress is **autosaved** mid-mission.
+
+#### **5.3 Post-Mission Report**
+
+At the end of every level, a "Mission Report" screen appears.
+
+1.  **Feedback:** The player answers three quick questions:
+    * How much did you enjoy the level? (1–10 rating)
+    * How much did you understand the concept? (1–10 rating)
+    * Would you recommend a friend play this level? (Yes/No)
+2.  **Recap & Reward:** The game provides a brief visual recap of the concept learned, and the player is awarded their mission **badge**.
+
+---
+
+### ## 6. The 10 Missions (Revised)
+
+The mission progression is redesigned for a more logical learning curve.
+
+| Mission # | Title | Concept | Gameplay | Goal & Recap |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | Earth’s Rotation | Day & Night | Spin a globe. **Sun fixed on the right.** Right half = DAY, left = NIGHT. Cities ride the globe; a checklist shows Need vs Now. | Place New York in night and Delhi + Nairobi in day. |
+| **2** | Moon Phases | Phases of the Moon | Drag the Moon in orbit around the Earth; use a slider to match the requested phase. | Match 5 phases (e.g., Crescent, Gibbous, Full). |
+| **3** | Seasons & Axial Tilt | Earth's Tilt | Use a tilt slider and an orbit knob to set the correct season for a given hemisphere. | Solve 4 scenarios (e.g., "Make it winter in the Northern Hemisphere"). |
+| **4** | Star Patterns | Constellations | Connect-the-dots on a starfield; distinguish real patterns from scrambled ones. | Recreate 3 major constellations (e.g., Orion, Ursa Major). |
+| **5** | Solar System Tour | Order & Features | Drag planets to their correct orbits. Then, tap/drag to "scan" iconic features on each. | Get the correct planet order + scan 4-5 features (e.g., Saturn's rings). |
+| **6** | Gravity Golf | Gravity & Orbits | "Mini-golf" in space. Set the launch angle/power to get a probe into a stable orbit. | Maintain a stable orbit for 10 seconds around two different planets. |
+| **7** | Shadow Play | Eclipses | Drag the Sun, Earth, and Moon into alignment to create solar and lunar eclipses. | Create one of each eclipse type and label the umbra/penumbra. |
+| **8** | Cosmic Sorting | Small Bodies | Sort falling objects into bins: Asteroids, Comets, Meteoroids. | Correctly sort 12 objects and see where they originate from (Asteroid Belt, Oort Cloud). |
+| **9** | Goldilocks Hunt | Exoplanets | Review simple data cards on exoplanets and decide if they are habitable. | Categorize 5 exoplanet candidates based on star type, zone, and size. |
+| **10** | The Big Zoom Out | Scale of the Universe | Finale mission. Swipe to zoom out from a house to the cosmic web. | A narrated, awe-inspiring epilogue awarding the final "Starlight Saga" trophy. |
+
+**Landing preview note:** Marketing surfaces missions **1–3** and **10** with a clear **04–09 bridge**, so the jump to the finale reads as continuity of the star-map series, not a missing list.
+
+#### **6.1 Mission 1 UX rules (shipped)**
+
+* Teaching must stay visible at all times: labeled DAY / NIGHT halves, labeled day/night line, and Sun with “light comes from here.”
+* Do **not** rely on unexplained random chaos — use a controlled start pose and a readable checklist.
+* City pins rotate with the Earth so the spatial model matches the mental model.
+
+---
+
+### ## 7. Adaptive Difficulty & Accessibility
+
+#### **7.1 Age Band Tuning**
+
+* **5–7 (Little Sparks):** Larger UI elements, no timers, frequent hints from Nova, and auto-snap assists for drag-and-drop.
+* **8–11 (Star Gazers):** Soft timers (for bonus points, not failure), limited hints on request, moderate precision required.
+* **12–15 (Galaxy Explorers):** Fewer hints, tighter precision, and optional challenge goals for replayability.
+
+#### **7.2 Accessibility**
+
+The game will be built for everyone.
+
+* **Visuals:** High-contrast, color-blind-safe palettes.
+* **Audio & Text:** Full text-to-speech for all prompts, optional subtitles.
+* **Controls:** All tap targets will be a minimum of 44px for ease of use.
+
+---
+
+### ## 8. Art, Audio & Motivation
+
+* **Art Style:** A cozy and playful high-contrast 2D aesthetic. Lots of fun particle effects like stardust. Nova will have expressive animations.
+* **Landing visual language:** Orbitron headings, Inter body; dark theme teal/cyan/amber; bright theme white ground + shiny gold/orange/red/violet type. Hero image: `cosmos-hero.png` (adventure cosmos + smiling cadets). Mission Map: circular vignettes of the same kids/rocket cast into each mission’s scene (`missions/mission-XX.png`). Mission 1 globe: `earth-bright.png`. Both themes: subtle starfield.
+* **Themes:** Players can switch **Dark** (deep space + teal star glow) and **Bright** (clean white ground with star sprinkles; shiny yellow / orange / red / violet type accents). Preference persists in `localStorage` (`cosmic-cadets-theme`) and applies app-wide. Dark is the default.
+* **Audio:** A chill, ambient space music soundtrack with soft, satisfying chimes for success and gentle cues for errors.
+* **Collectibles:** Motivation is driven by earning a unique **badge** for each mission, a **"Grand Cadet" trophy** for completing all 10, and filling out a collectible **constellation sticker book**.
+
+---
+
+### ## 9. Data Privacy & Safety (Kid-Safe)
+
+This is non-negotiable.
+
+* **Data Stored:** Callsign, parent email, age band, mission progress/scores, and anonymous feedback.
+* **Purpose:** Data is used *only* for personalization and sending progress reports/certificates.
+* **Compliance:** We will have a clear parental consent notice for users under 13. There will be **no third-party tracking**.
+* **User Control:** A parent-accessible settings menu will allow for data export or full deletion at any time.
+
+---
+
+### ## 10. Success Metrics
+
+* **Learning & Fun:** Average "Understanding" and "Enjoyment" scores from the feedback reports should be **≥7/10**.
+* **Engagement:** At least **70%** of players in the 8–11 and 12–15 age bands should complete missions without needing assistance.
+* **Acquisition (Landing):** Track Launch CTR from landing → onboarding/home, and % of launches that complete Cadet Registration.
+* **Qualitative:** We will monitor playtest data for completion times, retries, and hint usage to fine-tune mission balance.

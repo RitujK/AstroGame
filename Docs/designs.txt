@@ -1,0 +1,77 @@
+UI/UX design system — Cosmic Cadets
+Updated: July 15, 2026 (landing, themes, cosmic Mission Map, Mission 1 clarity)
+
+---
+
+1. Typography (NASA-inspired)
+Font strategy:
+Primary heading: Orbitron (Google Fonts) — tech/science feel
+Body/UI: Inter — readability
+Monospace accents: Courier Prime for data displays (mission IDs, checklist labels)
+Font loading: Google Fonts in index.html
+CSS variables: --font-heading, --font-body, --font-mono
+Hierarchy: headings use Orbitron; body uses Inter; mission HUD uses Orbitron for titles
+
+2. Color palette
+Dark theme (default):
+Deep space base: #0a0e27 / #050711
+Star/glow accents: #64ffda (teal), #4fc3f7 (cyan), #ffd54f (amber)
+Text: #ffffff / #b0bec5 / #78909c
+Starfield: subtle nebula washes + sprinkled dots (gold/teal/cool)
+
+Bright theme:
+Clean white ground: #ffffff / #fafafa (not peach/earth tones)
+Primary CTA: solar orange #ff6b00
+Secondary: rose red #e11845
+Accent: shiny gold #ffcc00
+Galaxy violet #7b2ff7 used in type gradients
+Shiny gradient type on landing headings (gold → orange → red → violet)
+Star sprinkles on white with soft color accents
+Landing hero: cosmos-hero.png (kids + rocket amid Earth, solar system, galaxies, nebulae). Mission Map vignettes: missions/mission-01…10.png (same cast, themed per concept). Mission 1 globe: earth-bright.png.
+
+Accessibility:
+WCAG contrast on body text
+44px minimum tap targets
+prefers-reduced-motion disables star twinkle
+
+3. App surfaces & layout
+Marketing landing (#landing) — public entry:
+Hero: brand wordmark, mantra, Launch CTA, theme toggle, cosmos-hero art
+Age bands section (Cadets nav scrolls here)
+Missions preview: 01–03 → 04–09 bridge → 10 (continuity, not a 1…3…10 bug)
+Closing CTA + footer
+Nav: Cadets / Missions scroll in-page; no About; Launch enters game
+
+Game shell (diegetic):
+Home: cosmic Mission Map trail — zigzag stops with circular vignette art per mission (kids + rocket in that mission’s scene), title/concept/teaser, badge status
+Profile: Cadet ID card + badges
+Settings: theme toggle + accessibility controls (TTS/subtitles/volume UI)
+Onboarding: Cadet Registration (from Launch when no profile)
+
+4. Diegetic HUD
+Panel frames, glowing borders, Orbitron labels
+Mission Map: illustrated trail stops (not plain numbered orbs)
+Mission HUD: objective text, Pause, Hint
+
+5. Theme toggle
+Landing header + Settings
+Persists as localStorage cosmic-cadets-theme (dark | light)
+data-theme on <html>; early FOUC script in index.html
+
+6. Mission 1 UX (Earth’s Rotation) — redesigned July 15, 2026
+Teaching model (must stay obvious):
+- Sun is FIXED on the right; rays point at Earth
+- RIGHT half of the globe = DAY; LEFT half = NIGHT
+- Vertical “day/night line” (terminator) labeled
+- Cities ride ON the spinning globe (pins rotate with the planet)
+- Side “CITY CHECKLIST” shows Need vs Now for New York / Delhi / Nairobi
+- Progress “Correct: N / 3”
+- Fixed starting scramble (readable), not chaotic random
+- Hint text restates the right=day / left=night rule
+
+7. Responsive
+Tablet-first; landing collapses nav links on narrow widths; mission checklist + globe side-by-side on desktop, globe centered with panel on larger tablets
+
+8. Motion
+Landing star twinkle (subtle); Mission Map nebula drift + star twinkle; theme color transition; mission success scale-in
+Reduce motion respected for map and landing star animations

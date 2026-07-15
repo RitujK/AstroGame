@@ -1,0 +1,136 @@
+/* Design Tokens - Cosmic Cadets */
+
+:root {
+  /* Typography */
+  --font-heading: 'Orbitron', monospace;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'Courier Prime', monospace;
+  
+  /* Colors - Deep Space Theme */
+  --color-space: #0a0e27;
+  --color-space-dark: #050711;
+  --color-space-light: #1a1a2e;
+  
+  /* Accents - Star Glow */
+  --color-primary: #64ffda;
+  --color-primary-glow: rgba(100, 255, 218, 0.3);
+  --color-secondary: #4fc3f7;
+  --color-secondary-glow: rgba(79, 195, 247, 0.3);
+  --color-accent: #ffd54f;
+  --color-accent-glow: rgba(255, 213, 79, 0.3);
+  --color-alert: #ff6b6b;
+  
+  /* Text Colors */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #b0bec5;
+  --color-text-tertiary: #78909c;
+  --color-text-muted: #546e7a;
+  
+  /* Borders & Panels */
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-glow: rgba(100, 255, 218, 0.2);
+  --color-panel-bg: rgba(26, 26, 46, 0.6);
+  --color-panel-border: rgba(100, 255, 218, 0.15);
+  
+  /* Spacing Scale (8px base) */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  
+  /* Typography Scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.5rem;
+  
+  /* Shadows & Glows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5);
+  --glow-primary: 0 0 20px var(--color-primary-glow);
+  --glow-secondary: 0 0 20px var(--color-secondary-glow);
+  --glow-accent: 0 0 20px var(--color-accent-glow);
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  
+  /* Layout */
+  --max-width-content: 1280px;
+  --header-height: 64px;
+  --tap-target-min: 44px;
+
+  /* Landing / surface helpers */
+  --color-hero-glow-a: rgba(79, 195, 247, 0.14);
+  --color-hero-glow-b: rgba(255, 107, 107, 0.08);
+  --color-hero-glow-c: rgba(255, 213, 79, 0.07);
+  --color-earth-glow: rgba(79, 195, 247, 0.35);
+  --color-cta-shadow: rgba(100, 255, 218, 0.35);
+  --color-rule: rgba(255, 255, 255, 0.1);
+  --color-rule-strong: rgba(255, 255, 255, 0.22);
+  --color-dot: rgba(255, 255, 255, 0.55);
+  --color-dot-dim: rgba(255, 255, 255, 0.22);
+  --color-star-warm: rgba(255, 213, 79, 0.7);
+  --color-star-hot: rgba(255, 107, 107, 0.55);
+  --color-btn-on-primary: #050711;
+}
+
+/* Bright theme — clean white space with shiny galaxy type */
+[data-theme="light"] {
+  --color-space: #ffffff;
+  --color-space-dark: #fafafa;
+  --color-space-light: #f3f4f8;
+
+  --color-primary: #ff6b00;
+  --color-primary-glow: rgba(255, 107, 0, 0.28);
+  --color-secondary: #e11845;
+  --color-secondary-glow: rgba(225, 24, 69, 0.22);
+  --color-accent: #ffcc00;
+  --color-accent-glow: rgba(255, 204, 0, 0.4);
+  --color-alert: #d50000;
+
+  --color-text-primary: #141028;
+  --color-text-secondary: #4a4560;
+  --color-text-tertiary: #6e6888;
+  --color-text-muted: #9089a8;
+
+  --color-border: rgba(20, 16, 40, 0.1);
+  --color-border-glow: rgba(255, 107, 0, 0.25);
+  --color-panel-bg: rgba(255, 255, 255, 0.92);
+  --color-panel-border: rgba(225, 24, 69, 0.16);
+
+  --shadow-sm: 0 2px 6px rgba(20, 16, 40, 0.06);
+  --shadow-md: 0 6px 16px rgba(20, 16, 40, 0.08);
+  --shadow-lg: 0 12px 28px rgba(20, 16, 40, 0.1);
+
+  --color-hero-glow-a: rgba(255, 204, 0, 0.12);
+  --color-hero-glow-b: rgba(255, 107, 0, 0.08);
+  --color-hero-glow-c: rgba(123, 47, 247, 0.07);
+  --color-earth-glow: rgba(255, 204, 0, 0.28);
+  --color-cta-shadow: rgba(255, 107, 0, 0.32);
+  --color-rule: rgba(20, 16, 40, 0.1);
+  --color-rule-strong: rgba(20, 16, 40, 0.18);
+  --color-dot: rgba(20, 16, 40, 0.28);
+  --color-dot-dim: rgba(123, 47, 247, 0.35);
+  --color-star-warm: rgba(255, 204, 0, 0.85);
+  --color-star-hot: rgba(225, 24, 69, 0.65);
+  --color-btn-on-primary: #ffffff;
+
+  /* Shiny type accents */
+  --color-type-shine: linear-gradient(120deg, #ffcc00 0%, #ff6b00 42%, #e11845 72%, #7b2ff7 100%);
+}
+

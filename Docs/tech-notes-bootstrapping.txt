@@ -1,0 +1,75 @@
+Cosmic Cadets - Technical Notes
+Updated: July 15, 2026 (landing, themes, cosmic Mission Map, Mission 1 redesign)
+
+Scope completed
+- Vite + TypeScript app in game/; Phaser 3 for missions.
+- Hash router with public routes: landing, onboarding; gated: home, profile, settings, mission.
+- Marketing landing page with cosmos hero art and Launch → game-start CTA.
+- Dark / Bright theme system (tokens + data-theme + localStorage).
+- Cosmic Mission Map trail with per-mission vignette art + shared catalog (`data/missions.ts`).
+- Onboarding, profile/save, feedback modal, age-band engine.
+- Mission 1: Earth’s Rotation — clarified day/night UX (side checklist, fixed Sun, cities on globe).
+- Mission 2: Moon Phases (implemented); Missions 3–10 stubs.
+
+Stack
+- Vite 7, TypeScript 5, Phaser 3, vite-plugin-pwa (installed, not fully configured).
+
+Local development (from game/)
+- npm install
+- npm run dev
+- npm run build / npm run preview
+- URLs:
+  - http://localhost:5173/#landing (default entry)
+  - http://localhost:5173/#onboarding
+  - http://localhost:5173/#home
+  - http://localhost:5173/#mission?id=1
+
+Entry & routing
+- Empty / unknown hash → #landing (replaceState cleans bad fragments).
+- navigate() uses history.pushState + popstate/hashchange coalesce (Safari-friendly).
+- Launch Mission: no profile → onboarding; has profile → home.
+- Profile guard in main.ts; PUBLIC_ROUTES = landing, onboarding.
+
+Theme
+- services/theme.ts — getTheme / setTheme / toggleTheme / initTheme
+- Key: cosmic-cadets-theme
+- tokens.css :root dark; [data-theme="light"] bright white + orange/red/gold accents
+- components/themeToggle.ts — shared toggle UI
+
+Project structure (highlights)
+- game/public/assets/images/
+  - cosmos-hero.png — landing hero (kids, rocket, cosmos)
+  - missions/mission-01.png … mission-10.png — Mission Map vignettes
+  - earth-bright.png — Mission 1 interactive globe
+  - earth.png — legacy stylized Earth (unused on landing)
+- game/src/data/missions.ts — titles, concepts, teasers, art paths
+- game/src/views/home.ts — cosmic Mission Map trail
+- game/src/styles/missionMap.css
+- game/src/views/landing.ts
+- game/src/styles/landing.css
+- game/src/services/theme.ts
+- game/src/engine/scenes/Mission01.ts — day/night teaching scene
+- game/src/engine/scenes/Mission02.ts — moon phases
+
+Mission Map notes
+- Alternating left/right stops along a glowing center spine; circular art frames.
+- Progress (completed / best score) read from save; all stops remain launchable (3–10 stub).
+
+Mission 1 technical notes
+- Loads `earth-bright.png` as the globe; procedural texture is fallback only.
+- Day = cos(worldAngle) > threshold (Sun along +X / right).
+- City pins are children of the rotating globe container.
+- Checklist UI is fixed in screen space.
+- Completion requires player interaction then all three targets matched.
+
+Known limitations
+- Missions 3–10 stubs.
+- Accessibility TTS/subtitles UI not fully wired.
+- PWA not configured.
+- Audio system pending.
+- Mission 1 globe is schematic (not real lat/lon GIS).
+
+Next focus
+- Fine-tune mission UX/visuals (Mission 1 started July 15, 2026).
+- Remaining missions 3–10.
+- Wire accessibility + audio + PWA.
