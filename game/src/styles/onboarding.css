@@ -210,6 +210,16 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .screen-onboarding {
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: var(--space-md);
+  }
+
+  .screen-onboarding main {
+    width: 100%;
+  }
+
   .onboarding-panel {
     padding: var(--space-lg);
   }

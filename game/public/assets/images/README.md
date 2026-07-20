@@ -27,10 +27,12 @@ Same cadets + smiling rocket as the landing hero, themed per mission:
 
 | File | Use |
 |------|-----|
+| `earth-equirectangular.jpg` | Mission 1 rotating sphere texture — NASA Blue Marble, public domain |
 | `earth-bright.png` | Mission 1 globe (city day/night) — clean blue oceans / green lands |
 | `earth.png` | Legacy stylized Earth (kept for reference; not used on landing) |
 
 ## Notes
 - Prefer PNG; landing hero is wide (~16:9); map vignettes are square (~1:1) and shown in circular frames.
-- Mission 1 falls back to a procedural globe if `earth-bright.png` fails to load.
+- `earth-equirectangular.jpg` source: NASA Earth Observatory Blue Marble (`land_shallow_topo_2048.jpg`), created by NASA GSFC and public domain in the United States.
+- Mission 1 falls back to a procedural globe if its Earth texture fails to load.
 - Catalog + art paths live in `game/src/data/missions.ts`.

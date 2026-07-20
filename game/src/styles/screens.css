@@ -91,6 +91,62 @@
   accent-color: var(--color-primary);
 }
 
+.settings-section-title {
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  color: var(--color-primary);
+}
+
+.settings-section-lede {
+  margin: 0 0 var(--space-md);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.settings-privacy {
+  margin-top: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--color-panel-bg);
+  border: 1px solid var(--color-panel-border);
+  border-radius: var(--radius-md);
+}
+
+.settings-privacy-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.settings-action-btn {
+  padding: var(--space-sm) var(--space-lg);
+  min-height: 44px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: rgba(26, 26, 46, 0.6);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.settings-action-btn:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--glow-primary);
+}
+
+.settings-action-btn--danger {
+  border-color: var(--color-alert);
+  color: var(--color-alert);
+}
+
+.settings-action-btn--danger:hover {
+  background: rgba(255, 107, 107, 0.12);
+  box-shadow: 0 0 20px rgba(255, 107, 107, 0.25);
+}
+
 /* Mission Screen */
 .screen-mission {
   display: flex;
@@ -131,6 +187,44 @@
 #phaser-container canvas {
   position: relative;
   z-index: 0;
+}
+
+@media (max-width: 640px) {
+  /* Missions keep shared compact chrome on one line to maximize play space. */
+  .screen-mission > header.diegetic,
+  .screen-mission .diegetic-nav {
+    flex-wrap: nowrap;
+  }
+
+  .screen-mission .diegetic-mission-label {
+    display: none;
+  }
+
+  .screen-settings .settings-row--theme,
+  .screen-settings label {
+    gap: var(--space-sm);
+  }
+
+  .screen-settings input[type="range"] {
+    width: min(48vw, 200px);
+  }
+
+  .settings-privacy {
+    padding: var(--space-md);
+  }
+
+  .settings-privacy-actions {
+    flex-direction: column;
+  }
+
+  .settings-action-btn {
+    width: 100%;
+  }
+
+  .screen-profile .fields strong {
+    display: block;
+    margin: 0 0 var(--space-xs);
+  }
 }
 
 .mission-stub {

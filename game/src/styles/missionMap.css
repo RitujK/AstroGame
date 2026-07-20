@@ -234,6 +234,46 @@
     var(--glow-accent);
 }
 
+.mission-stop.is-locked .mission-stop-art-wrap {
+  opacity: 0.55;
+  filter: grayscale(0.35);
+  box-shadow:
+    0 0 0 1px var(--color-border),
+    0 12px 28px rgba(0, 0, 0, 0.25);
+}
+
+.mission-stop-btn--locked {
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+.mission-stop-btn--locked:hover .mission-stop-art-wrap,
+.mission-stop-btn--locked:focus-visible .mission-stop-art-wrap {
+  transform: none;
+  box-shadow:
+    0 0 0 1px var(--color-border),
+    0 12px 28px rgba(0, 0, 0, 0.25);
+}
+
+.mission-stop-lock {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(5, 7, 17, 0.78);
+  border: 1px solid var(--color-border);
+  font-size: 16px;
+}
+
+.mission-stop.is-locked .mission-stop-status {
+  color: var(--color-text-tertiary);
+}
+
 .mission-stop-art {
   display: block;
   width: 100%;

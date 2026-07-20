@@ -1,11 +1,11 @@
 import { navigate } from '../router';
 import type { Route } from '../router';
 import { storage } from '../services/storage';
+import { isMissionUnlocked } from '../data/missions';
 import { ageBandService } from '../services/ageBand';
 import { createMissionGame, destroyMissionGame } from '../engine/phaserBoot';
 import { showFeedbackModal } from '../components/FeedbackModal';
 import { bindDiegeticBrand, diegeticHeaderMarkup } from '../components/diegeticHeader';
-import type { MissionFeedback } from '../types/profile';
 
 function missionChrome(missionLabel: string): string {
   return diegeticHeaderMarkup({
@@ -39,6 +39,13 @@ export function renderMission(container: HTMLElement, route: Route): void {
   }
 
   ageBandService.setAgeBand(profile.ageBand);
+
+  const save = storage.getSaveData();
+  const isMissionComplete = (missionNum: number): boolean => Boolean(save?.missions[missionNum]?.completed);
+  if (!isMissionUnlocked(id, isMissionComplete)) {
+    navigate({ name: 'home' });
+    return;
+  }
 
   const root = document.createElement('div');
   root.className = 'screen screen-mission';
@@ -79,17 +86,18 @@ export function renderMission(container: HTMLElement, route: Route): void {
   container.appendChild(root);
   wireMissionChrome(root);
 
-  const game = createMissionGame({
-    missionId: id,
-    ageBand: profile.ageBand,
-    onComplete: (score?: number) => handleMissionComplete(id, score),
-    onPause: () => handleMissionPause(),
-  });
-
   loader()
-    .then(({ defaultScene, SceneClass }) => {
+    .then(({ SceneClass }) => {
       if (!document.getElementById('phaser-container')) return;
-      game.scene.add(defaultScene, SceneClass, true);
+      createMissionGame(
+        {
+          missionId: id,
+          ageBand: profile.ageBand,
+          onComplete: (score?: number) => handleMissionComplete(id, score),
+          onPause: () => handleMissionPause(),
+        },
+        SceneClass
+      );
     })
     .catch((error) => {
       console.error(`Error loading Mission ${id}:`, error);
@@ -117,11 +125,8 @@ function handleMissionComplete(missionId: number, score?: number): void {
 
   showFeedbackModal({
     missionId,
-    onComplete: (feedback: MissionFeedback) => {
-      console.log('Mission complete with feedback:', feedback);
-      setTimeout(() => {
-        navigate({ name: 'home' });
-      }, 500);
+    onComplete: () => {
+      navigate({ name: 'home' });
     },
   });
 }

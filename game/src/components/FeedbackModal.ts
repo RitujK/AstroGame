@@ -1,17 +1,18 @@
 /* Mission Report Feedback Modal */
 
 import { storage } from '../services/storage';
+import { getMission, padMissionId } from '../data/missions';
 import type { MissionFeedback } from '../types/profile';
 
 export interface FeedbackModalOptions {
   missionId: number;
-  onComplete: (feedback: MissionFeedback) => void;
+  onComplete: () => void;
 }
 
 export function showFeedbackModal(options: FeedbackModalOptions): void {
   const { missionId, onComplete } = options;
+  const mission = getMission(missionId);
 
-  // Create modal overlay
   const overlay = document.createElement('div');
   overlay.className = 'feedback-modal-overlay';
   overlay.innerHTML = `
@@ -93,7 +94,7 @@ export function showFeedbackModal(options: FeedbackModalOptions): void {
     </div>
   `;
 
-  // Update rating displays
+  const modal = overlay.querySelector('.feedback-modal') as HTMLElement;
   const enjoymentSlider = overlay.querySelector('#enjoyment') as HTMLInputElement;
   const understandingSlider = overlay.querySelector('#understanding') as HTMLInputElement;
   const enjoymentValue = overlay.querySelector('#enjoymentValue') as HTMLElement;
@@ -107,7 +108,6 @@ export function showFeedbackModal(options: FeedbackModalOptions): void {
     understandingValue.textContent = understandingSlider.value;
   });
 
-  // Form submission
   const form = overlay.querySelector('#feedbackForm') as HTMLFormElement;
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -120,20 +120,50 @@ export function showFeedbackModal(options: FeedbackModalOptions): void {
       timestamp: Date.now(),
     };
 
-    // Save feedback
     storage.saveMissionFeedback(missionId, feedback);
-
-    // Call completion callback
-    onComplete(feedback);
-
-    // Remove modal
-    overlay.remove();
+    showRecapAndBadge(modal, missionId, mission, onComplete);
   });
 
-  // Add to body
   document.body.appendChild(overlay);
-
-  // Focus first input
   setTimeout(() => enjoymentSlider.focus(), 100);
 }
 
+function showRecapAndBadge(
+  modal: HTMLElement,
+  missionId: number,
+  mission: ReturnType<typeof getMission>,
+  onComplete: () => void,
+): void {
+  const title = mission?.title ?? `Mission ${missionId}`;
+  const concept = mission?.concept ?? 'Astronomy';
+  const recap = mission?.recap ?? 'You explored a new corner of the cosmos today.';
+  const badgeLabel = padMissionId(missionId);
+
+  modal.innerHTML = `
+    <div class="feedback-recap">
+      <header class="feedback-header">
+        <h2>Mission Complete!</h2>
+        <p class="text-secondary">${title} · ${concept}</p>
+      </header>
+
+      <div class="feedback-badge-award" role="img" aria-label="Mission ${missionId} badge earned">
+        <div class="feedback-badge-icon">✦</div>
+        <p class="feedback-badge-label">Mission ${badgeLabel} Badge</p>
+      </div>
+
+      <div class="feedback-recap-copy">
+        <p class="feedback-recap-eyebrow">What you discovered</p>
+        <p class="feedback-recap-text">${recap}</p>
+      </div>
+
+      <div class="feedback-actions">
+        <button type="button" class="submit-feedback-btn" id="feedbackDoneBtn">← Back to Mission Map</button>
+      </div>
+    </div>
+  `;
+
+  modal.querySelector('#feedbackDoneBtn')?.addEventListener('click', () => {
+    modal.closest('.feedback-modal-overlay')?.remove();
+    onComplete();
+  });
+}

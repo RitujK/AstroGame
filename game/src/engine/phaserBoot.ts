@@ -2,6 +2,7 @@
 
 import Phaser from 'phaser';
 import type { AgeBand } from '../types/profile';
+import { getMissionPalette } from './missionTheme';
 
 export interface MissionConfig {
   missionId: number;
@@ -12,7 +13,10 @@ export interface MissionConfig {
 
 let gameInstance: Phaser.Game | null = null;
 
-export function createMissionGame(config: MissionConfig): Phaser.Game {
+export function createMissionGame(
+  config: MissionConfig,
+  SceneClass: new (...args: never[]) => Phaser.Scene
+): Phaser.Game {
   // Destroy existing game if present
   if (gameInstance) {
     gameInstance.destroy(true);
@@ -24,7 +28,10 @@ export function createMissionGame(config: MissionConfig): Phaser.Game {
     width: window.innerWidth,
     height: window.innerHeight,
     parent: 'phaser-container',
-    backgroundColor: '#0a0e27',
+    backgroundColor: getMissionPalette().background,
+    render: {
+      antialias: true,
+    },
     scale: {
       mode: Phaser.Scale.RESIZE,
       autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -36,7 +43,10 @@ export function createMissionGame(config: MissionConfig): Phaser.Game {
         debug: false,
       },
     },
-    scene: [], // Scenes will be registered by individual missions
+    // Register the scene in the initial config. Adding it immediately after
+    // `new Phaser.Game()` races Phaser's async renderer boot on slower/mobile
+    // devices and can fail before a canvas is created.
+    scene: [SceneClass],
   };
 
   gameInstance = new Phaser.Game(gameConfig);

@@ -1,91 +1,22 @@
-Here's the high-level design doc for our masterpiece: "Cosmic Cadets: A Starlight Saga" 🚀✨
+# Cosmic Cadets — Original Creative Pitch (Archived)
 
-> **Note (July 15, 2026):** Mission numbering/titles in the live **PRD** supersede the early list below where they differ. Shipped Mission 1 is **Earth’s Rotation (Day & Night)**, not “Solar System Line-up.” Prefer `Docs/PRD.txt` + `Docs/designs.txt` + `Docs/tech-notes-bootstrapping.txt` for current product/UX truth. This file is retained as the original creative pitch.
+**Status:** Archived July 2026. Superseded by [`prd.txt`](prd.txt) (v2.4+).
 
-## The Pitch: The Core Concept
-"Cosmic Cadets" is an interactive learning adventure that takes players aged 5-15 on a journey from our own backyard, the Solar System, to the mind-bending edges of the universe. Each level is a new mission, built around a core astronomy concept with a unique, super-fun gameplay mechanic. Our mantra is: Play, Discover, Understand.
+This file preserved the first brainstorm: brand pitch, Nova as guide, feedback loop shape, and an early 10-mission list. **Do not use the mission order or titles here** — they were redesigned for a better learning curve.
 
-We'll start with a slick, animated intro and a friendly alien guide, 'Nova', who will be the player's companion throughout their journey.
+## Current canonical docs
 
-## Player Onboarding: Your Mission Briefing
-The game kicks off with the "Cadet Registration" screen. We keep it cool and simple:
+- **Product:** [`prd.txt`](prd.txt)
+- **Design system:** [`designs.txt`](designs.txt)
+- **Engineering:** [`tech-notes-bootstrapping.txt`](tech-notes-bootstrapping.txt)
+- **Mission catalog in code:** `game/src/data/missions.ts`
 
-Enter Your Callsign: This is where the player enters their name. It's not a form; it's their official space explorer name!
+## What remains useful from the original pitch
 
-Interstellar Comms Link: We ask for an email ID here. We'll frame it as, "Where do we send your mission reports and certificates, Cadet?" This makes it feel like a part of the game, not just data collection.
+- Core mantra: **Play → Discover → Understand**
+- Diegetic onboarding (Callsign, Interstellar Comms Link, Cosmic Cadet ID)
+- Nova as companion guide
+- Three-step Mission Report (enjoyment, understanding, recommend)
+- Finale concept: **The Big Zoom Out** (scale of the universe)
 
-Once registered, they get their official 'Cosmic Cadet' ID card and are ready for their first mission.
-
-## The Game Plan: 10 Epic Missions (Levels)
-Our game is structured into 10 progressive missions. Each mission builds on the last, taking the cadet deeper into space and knowledge.
-
-Mission 1: Solar System Line-up
-
-Concept: The order and names of the planets.
-
-Gameplay: A drag-and-drop puzzle. Players drag the planets from a "planet dock" and place them in their correct orbits around the Sun. When a planet is selected, Nova shares a fun fact about it. Simple, intuitive, and highly effective.
-
-Mission 2: Moon Dance
-
-Concept: The phases of the Moon. 🌕🌖🌗🌘🌑
-
-Gameplay: A lighting puzzle. The player controls a light source (the Sun) and rotates the Moon around the Earth. Their goal is to match the shadow on the Moon to a target phase (e.g., "Make a Crescent Moon!").
-
-Mission 3: World Spinner
-
-Concept: Earth's rotation causes day/night, and its tilt causes seasons.
-
-Gameplay: An interactive globe simulator. Players can spin the Earth to see the cycle of day and night. A "tilt" button lets them angle the Earth to see how the Sun's rays hit differently, creating summer and winter.
-
-Mission 4: Star Connectors
-
-Concept: Constellations.
-
-Gameplay: A cosmic connect-the-dots game. Players are shown a field of stars and must trace the patterns of famous constellations like Orion or the Big Dipper. Once connected, the constellation's mythological figure briefly animates.
-
-Mission 5: Asteroid Navigator
-
-Concept: The unique features of different planets (e.g., Saturn's rings, Jupiter's Great Red Spot).
-
-Gameplay: A side-scrolling flying game. The player pilots a small spaceship on a "Grand Tour" of the solar system. Their mission is to fly close to each planet and "scan" its key feature while dodging asteroids.
-
-Mission 6: Star Factory
-
-Concept: The life cycle of a star.
-
-Gameplay: A simple "merge and evolve" game. Players start with a cloud of nebula gas. They tap to merge gas clouds to form a protostar. They keep adding mass to evolve it into a main-sequence star, then a red giant, and finally a spectacular supernova or a dense white dwarf.
-
-Mission 7: Galaxy Architects
-
-Concept: The different types of galaxies (spiral, elliptical, irregular).
-
-Gameplay: A creative "builder" sandbox. Players are given a central core and buckets of "star clusters." They use simple tools to arrange the stars into a spiral, elliptical, or a chaotic irregular galaxy.
-
-Mission 8: Gravity Slingshot
-
-Concept: How gravity and black holes work.
-
-Gameplay: A physics-based puzzle like Angry Birds in space. Players must launch a space probe from Point A to Point B. They have to use the gravitational pull of planets to bend the probe's trajectory, avoiding being sucked into a black hole.
-
-Mission 9: Comet Catchers
-
-Concept: The difference between comets, meteors, and asteroids.
-
-Gameplay: A fast-paced "sorting" game. Objects fly across the screen. The player has to drag asteroids into a "rock bin," icy comets into an "ice bin," and tap on meteors as they enter the atmosphere to create a "shooting star" effect.
-
-Mission 10: The Big Zoom Out
-
-Concept: The immense scale of the universe.
-
-Gameplay: An interactive animated sequence. The game starts zoomed in on the player's house. The player swipes up to zoom out—to their city, country, Earth, the Solar System, the Milky Way, and finally to a web of galaxies. At each stage, Nova explains what they're seeing. It's a powerful, awe-inspiring finale.
-
-## Mission Debrief: The Feedback Loop
-At the end of each mission, a "Mission Report" screen pops up. This is our non-intrusive feedback system.
-
-Step 1: Fun Factor: "How much did you enjoy this mission?" with a simple slider from 1 (Boring!) to 10 (Blast off!).
-
-Step 2: Brain Gain: "How well do you understand the concept now?" with a slider from 1 (Huh?) to 10 (I'm a genius!).
-
-Step 3: Share the Adventure: "Would you recommend this mission to a friend?" with simple "Yes" 👍 or "No" 👎 buttons.
-
-This data is gold. It tells us which levels are hitting the mark and which ones need a tune-up.
+For full mission titles, gameplay specs, landing flow, themes, and privacy requirements, see the PRD.

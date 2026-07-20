@@ -28,8 +28,8 @@ export function renderProfile(container: HTMLElement): void {
             <span id="ageBand" class="text-secondary">${profile?.ageBand ? getAgeBandLabel(profile.ageBand) : '—'}</span>
           </div>
           <div>
-            <strong>Email:</strong> 
-            <span class="text-secondary">${profile?.email || '—'}</span>
+            <strong>Guardian comms:</strong> 
+            <span class="text-secondary">On file (manage in Settings)</span>
           </div>
           <div style="margin-top: var(--space-lg);">
             <strong style="display: block; margin-bottom: var(--space-md);">Mission Badges:</strong>

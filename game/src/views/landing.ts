@@ -3,6 +3,46 @@
 import { navigate } from '../router';
 import { storage } from '../services/storage';
 import { bindThemeToggle, themeToggleMarkup } from '../components/themeToggle';
+import { getMission, padMissionId } from '../data/missions';
+
+function renderLandingMissionPreview(): string {
+  const previewIds = [1, 2, 3] as const;
+  const items = previewIds
+    .map((id) => {
+      const mission = getMission(id);
+      if (!mission) return '';
+      return `
+        <article class="landing-mission-item landing-mission-item--${padMissionId(id)}">
+          <span class="landing-mission-num">${padMissionId(id)}</span>
+          <h3>${mission.title}</h3>
+          <p>${mission.teaser}</p>
+        </article>
+        <span class="landing-mission-connector" aria-hidden="true"></span>`;
+    })
+    .join('');
+
+  const finale = getMission(10);
+  const finaleBlock = finale
+    ? `
+        <article class="landing-mission-item landing-mission-item--10">
+          <span class="landing-mission-num">10</span>
+          <h3>${finale.title}</h3>
+          <p>${finale.teaser}</p>
+        </article>`
+    : '';
+
+  return `
+        ${items}
+        <article class="landing-mission-bridge" aria-label="Missions 4 through 9">
+          <div class="landing-bridge-dots" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <span class="landing-mission-num">04 – 09</span>
+          <p>Six more missions unlock as you explore the star map.</p>
+        </article>
+        <span class="landing-mission-connector" aria-hidden="true"></span>
+        ${finaleBlock}`;
+}
 
 export function renderLanding(container: HTMLElement): void {
   const root = document.createElement('div');
@@ -97,37 +137,7 @@ export function renderLanding(container: HTMLElement): void {
         Each mission lasts 3–10 minutes and teaches one big idea through play — with Nova as your guide.
       </p>
       <div class="landing-mission-journey" aria-label="Mission journey preview">
-        <article class="landing-mission-item landing-mission-item--01">
-          <span class="landing-mission-num">01</span>
-          <h3>Solar System Line-up</h3>
-          <p>Drag planets into their true orbits.</p>
-        </article>
-        <span class="landing-mission-connector" aria-hidden="true"></span>
-        <article class="landing-mission-item landing-mission-item--02">
-          <span class="landing-mission-num">02</span>
-          <h3>Moon Dance</h3>
-          <p>Shape moonlight into every phase.</p>
-        </article>
-        <span class="landing-mission-connector" aria-hidden="true"></span>
-        <article class="landing-mission-item landing-mission-item--03">
-          <span class="landing-mission-num">03</span>
-          <h3>World Spinner</h3>
-          <p>Spin Earth through day, night, seasons.</p>
-        </article>
-        <span class="landing-mission-connector" aria-hidden="true"></span>
-        <article class="landing-mission-bridge" aria-label="Missions 4 through 9">
-          <div class="landing-bridge-dots" aria-hidden="true">
-            <span></span><span></span><span></span><span></span><span></span><span></span>
-          </div>
-          <span class="landing-mission-num">04 – 09</span>
-          <p>Six more missions unlock as you explore the star map.</p>
-        </article>
-        <span class="landing-mission-connector" aria-hidden="true"></span>
-        <article class="landing-mission-item landing-mission-item--10">
-          <span class="landing-mission-num">10</span>
-          <h3>The Big Zoom Out</h3>
-          <p>Zoom from your home to a web of galaxies.</p>
-        </article>
+        ${renderLandingMissionPreview()}
       </div>
     </section>
 

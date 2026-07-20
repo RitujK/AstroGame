@@ -84,19 +84,17 @@ export function renderOnboarding(container: HTMLElement): void {
             <span class="error-message" id="ageBandError"></span>
           </div>
 
-          <!-- Guardian consent checkbox commented out for now -->
-          <!--
+          <!-- Guardian consent for users under 13 -->
           <div class="consent-notice">
             <label class="consent-checkbox">
-              <input type="checkbox" id="consent" required />
+              <input type="checkbox" id="consent" name="consent" required />
               <span>
-                For users under 13, parent/guardian consent is required. 
+                For users under 13, parent/guardian consent is required.
                 By registering, you agree to receive progress reports and certificates via email.
               </span>
             </label>
             <span class="error-message" id="consentError"></span>
           </div>
-          -->
 
           <button type="submit" class="submit-btn">
             Launch Mission 🚀
@@ -133,7 +131,7 @@ function handleSubmit(root: HTMLElement): void {
   const callsign = (formData.get('callsign') as string)?.trim();
   const email = (formData.get('email') as string)?.trim();
   const ageBand = formData.get('ageBand') as AgeBand;
-  // const consent = formData.get('consent') === 'on'; // Commented out for now
+  const consent = formData.get('consent') === 'on';
 
   // Validation
   let isValid = true;
@@ -153,11 +151,11 @@ function handleSubmit(root: HTMLElement): void {
     isValid = false;
   }
 
-  // Guardian consent validation commented out for now
-  // if (!consent) {
-  //   showError(root, 'consentError', 'Please confirm parent/guardian consent');
-  //   isValid = false;
-  // }
+  // Guardian consent required for kid-safe registration
+  if (!consent) {
+    showError(root, 'consentError', 'Please confirm parent/guardian consent');
+    isValid = false;
+  }
 
   if (!isValid) return;
 
