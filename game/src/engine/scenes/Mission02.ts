@@ -1,7 +1,6 @@
 /* Mission 2: Moon Phases */
 
 import { BaseMissionScene } from './BaseMissionScene';
-import { ageBandService } from '../../services/ageBand';
 
 type MoonPhaseName =
   | 'New Moon'
@@ -108,10 +107,6 @@ export class Mission02Scene extends BaseMissionScene {
         ? 'Match 5 moon phases. Move the Moon, then Lock In.'
         : 'Match 5 moon phases. Drag the Moon on its orbit or use the slider, then tap Lock In.'
     );
-
-    if (ageBandService.getHintFrequency() !== 'none') {
-      this.hintButton.setVisible(true);
-    }
 
     this.uiPanels = this.add.graphics().setScrollFactor(0).setDepth(2);
     this.sunlightGfx = this.add.graphics().setScrollFactor(0).setDepth(5);
@@ -376,11 +371,6 @@ export class Mission02Scene extends BaseMissionScene {
       .setPosition(this.sliderX + this.sliderWidth / 2, this.sliderY)
       .setSize(this.sliderWidth, 30)
       .setDisplaySize(this.sliderWidth, 30);
-
-    this.hintButton.setPosition(
-      this.viewPanel.right - this.hintButton.displayWidth - 10,
-      this.viewPanel.y + 8
-    );
 
     this.drawUIPanels();
     this.drawOrbitRing();
@@ -716,13 +706,13 @@ export class Mission02Scene extends BaseMissionScene {
         padding: { x: 20, y: 15 },
       })
       .setOrigin(0.5)
+      .setAlpha(0)
       .setDepth(1000);
 
     this.tweens.add({
       targets: successText,
-      scale: { from: 0, to: 1 },
-      duration: 500,
-      ease: 'Back.easeOut',
+      alpha: 1,
+      duration: 300,
     });
   }
 

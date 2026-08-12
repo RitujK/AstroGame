@@ -7,6 +7,21 @@ import { createMissionGame, destroyMissionGame } from '../engine/phaserBoot';
 import { showFeedbackModal } from '../components/FeedbackModal';
 import { bindDiegeticBrand, diegeticHeaderMarkup } from '../components/diegeticHeader';
 
+async function ensureMissionFontsReady(): Promise<void> {
+  if (!document.fonts) return;
+  await Promise.all([
+    document.fonts.load('400 16px Inter'),
+    document.fonts.load('500 16px Inter'),
+    document.fonts.load('600 16px Inter'),
+    document.fonts.load('400 18px Orbitron'),
+    document.fonts.load('700 18px Orbitron'),
+    document.fonts.load('900 18px Orbitron'),
+    document.fonts.load('400 14px "Courier Prime"'),
+    document.fonts.load('700 14px "Courier Prime"'),
+  ]);
+  await document.fonts.ready;
+}
+
 function missionChrome(missionLabel: string): string {
   return diegeticHeaderMarkup({
     trailing: `
@@ -61,6 +76,16 @@ export function renderMission(container: HTMLElement, route: Route): void {
         defaultScene: 'Mission02',
         SceneClass: m.Mission02Scene,
       })),
+    3: () =>
+      import('../engine/scenes/Mission03').then((m) => ({
+        defaultScene: 'Mission03',
+        SceneClass: m.Mission03Scene,
+      })),
+    4: () =>
+      import('../engine/scenes/Mission04').then((m) => ({
+        defaultScene: 'Mission04',
+        SceneClass: m.Mission04Scene,
+      })),
   };
 
   const loader = missionLoaders[id];
@@ -87,7 +112,9 @@ export function renderMission(container: HTMLElement, route: Route): void {
   wireMissionChrome(root);
 
   loader()
-    .then(({ SceneClass }) => {
+    .then(async ({ SceneClass }) => {
+      if (!document.getElementById('phaser-container')) return;
+      await ensureMissionFontsReady();
       if (!document.getElementById('phaser-container')) return;
       createMissionGame(
         {

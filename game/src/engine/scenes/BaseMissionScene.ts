@@ -15,7 +15,6 @@ export abstract class BaseMissionScene extends Phaser.Scene {
   protected palette!: MissionPalette;
 
   protected objectiveText!: Phaser.GameObjects.Text;
-  protected hintButton!: Phaser.GameObjects.Text;
   protected pauseButton!: Phaser.GameObjects.Text;
   
   protected isPaused: boolean = false;
@@ -62,9 +61,6 @@ export abstract class BaseMissionScene extends Phaser.Scene {
     if (this.pauseButton) {
       this.pauseButton.setStyle({ backgroundColor: this.palette.panelChrome, color: this.palette.textPrimary });
     }
-    if (this.hintButton) {
-      this.hintButton.setStyle({ color: this.palette.accent });
-    }
     if (this.objectiveText) {
       this.objectiveText.setColor(this.palette.primary);
     }
@@ -88,9 +84,26 @@ export abstract class BaseMissionScene extends Phaser.Scene {
     text: string | string[],
     style?: Phaser.Types.GameObjects.Text.TextStyle
   ): Phaser.GameObjects.Text {
+    const rootStyles = getComputedStyle(document.documentElement);
+    const requestedFamily = style?.fontFamily ?? '';
+    const fontFamily = requestedFamily.includes('Orbitron')
+      ? rootStyles.getPropertyValue('--font-heading').trim() || "'Orbitron', monospace"
+      : requestedFamily.includes('Courier Prime')
+        ? rootStyles.getPropertyValue('--font-mono').trim() || "'Courier Prime', monospace"
+        : requestedFamily.includes('Inter')
+          ? rootStyles.getPropertyValue('--font-body').trim() || "'Inter', system-ui, sans-serif"
+          : requestedFamily;
+    const typographyDefaults = requestedFamily.includes('Orbitron')
+      ? { fontStyle: '700', letterSpacing: 1 }
+      : {};
+
     return this.add.text(x, y, text, {
-      resolution: window.devicePixelRatio || 1,
+      // Phaser text is rasterized to a texture. Use a higher integer resolution
+      // than the game canvas so it matches the crisp DOM typography.
+      resolution: Math.min(3, Math.max(2, Math.ceil((window.devicePixelRatio || 1) * 1.5))),
+      ...typographyDefaults,
       ...style,
+      fontFamily,
     });
   }
 
@@ -107,8 +120,7 @@ export abstract class BaseMissionScene extends Phaser.Scene {
       wordWrap: { width: width - 40 },
     }).setScrollFactor(0);
 
-    // Pause button — disabled for now (not needed yet). Re-enable by uncommenting
-    // this block and moving the Hint button back down to its original y (60).
+    // Pause button — disabled for now (not needed yet).
     // this.pauseButton = this.addText(width - 100, 20, '⏸ Pause', {
     //   fontSize: '16px',
     //   fontFamily: 'Inter, sans-serif',
@@ -122,22 +134,6 @@ export abstract class BaseMissionScene extends Phaser.Scene {
     //   .on('pointerover', () => this.pauseButton.setStyle({ backgroundColor: this.palette.panelChromeHover }))
     //   .on('pointerout', () => this.pauseButton.setStyle({ backgroundColor: this.palette.panelChrome }));
 
-    // Hint button (top-right; takes the Pause button's slot while pause is disabled)
-    this.hintButton = this.addText(width - 100, 20, '💡 Hint', {
-      fontSize: '14px',
-      fontFamily: 'Inter, sans-serif',
-      color: this.palette.accent,
-      backgroundColor: this.palette.panelChromeActive,
-      padding: { x: 10, y: 6 },
-    })
-      .setScrollFactor(0)
-      .setDepth(100)
-      .setInteractive({ useHandCursor: true })
-      .on('pointerdown', () => this.showHint())
-      .on('pointerover', () => this.hintButton.setStyle({ backgroundColor: this.palette.panelChromeHover }))
-      .on('pointerout', () => this.hintButton.setStyle({ backgroundColor: this.palette.panelChromeActive }))
-      .setVisible(false); // Hidden by default, missions can show it if needed
-
     this.scale.on('resize', this.handleBaseResize, this);
   }
 
@@ -148,9 +144,6 @@ export abstract class BaseMissionScene extends Phaser.Scene {
     }
     if (this.pauseButton) {
       this.pauseButton.setPosition(width - 100, 20);
-    }
-    if (this.hintButton) {
-      this.hintButton.setPosition(width - 100, 20);
     }
     this.onSceneResize(width, height);
   }

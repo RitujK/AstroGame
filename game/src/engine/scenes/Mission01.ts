@@ -6,7 +6,6 @@
  */
 
 import { BaseMissionScene } from './BaseMissionScene';
-import { ageBandService } from '../../services/ageBand';
 
 interface City {
   name: string;
@@ -99,9 +98,6 @@ export class Mission01Scene extends BaseMissionScene {
     this.globeRotation = 270;
     this.updateGlobe();
 
-    if (ageBandService.getHintFrequency() !== 'none') {
-      this.hintButton.setVisible(true);
-    }
   }
 
   /** Responsive layout: side-by-side panel on wide screens, stacked on narrow/short ones. */
@@ -398,15 +394,6 @@ export class Mission01Scene extends BaseMissionScene {
     this.instructText.setPosition(width / 2, isCompact ? panelY + panelH - 30 : height - 30);
     this.instructText.setStyle({ backgroundColor: this.palette.panelChrome, color: this.palette.textPrimary });
 
-    // The objective needs the full canvas width on mobile. Move Hint into the
-    // checklist header where it remains easy to reach without covering text.
-    if (this.hintButton) {
-      if (isCompact) {
-        this.hintButton.setPosition(panelX + panelW - this.hintButton.displayWidth - 14, panelY + 10);
-      } else {
-        this.hintButton.setPosition(width - 100, 20);
-      }
-    }
   }
 
   private createCities(): void {
@@ -473,8 +460,10 @@ export class Mission01Scene extends BaseMissionScene {
       if (!this.isDragging || this.isComplete) return;
       // One globe diameter of horizontal travel equals a half-turn. Vertical
       // movement does not tilt Earth away from its north-south polar axis.
+      // Subtract so the front face follows the cursor (drag right → continents
+      // move right), matching a physical globe under your finger.
       const delta = ((pointer.x - this.dragStartX) / (this.layout.globeRadius * 2)) * 180;
-      this.globeRotation = this.dragStartRotation + delta;
+      this.globeRotation = this.dragStartRotation - delta;
       this.updateGlobe();
       this.checkCompletion();
     });
@@ -693,13 +682,13 @@ export class Mission01Scene extends BaseMissionScene {
         padding: { x: 20, y: 15 },
       })
       .setOrigin(0.5)
+      .setAlpha(0)
       .setDepth(1000);
 
     this.tweens.add({
       targets: successText,
-      scale: { from: 0, to: 1 },
-      duration: 500,
-      ease: 'Back.easeOut',
+      alpha: 1,
+      duration: 300,
     });
   }
 

@@ -23,18 +23,21 @@ export function createMissionGame(
     gameInstance = null;
   }
 
+  const parent = document.getElementById('phaser-container');
   const gameConfig: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: parent?.clientWidth || window.innerWidth,
+    height: parent?.clientHeight || window.innerHeight,
     parent: 'phaser-container',
     backgroundColor: getMissionPalette().background,
     render: {
       antialias: true,
+      roundPixels: true,
     },
     scale: {
       mode: Phaser.Scale.RESIZE,
       autoCenter: Phaser.Scale.CENTER_BOTH,
+      autoRound: true,
     },
     physics: {
       default: 'arcade',
