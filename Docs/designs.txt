@@ -1,5 +1,5 @@
 UI/UX design system — Cosmic Cadets
-Updated: July 15, 2026 (landing, themes, cosmic Mission Map, Mission 1 clarity)
+Updated: August 12, 2026 (missions 1–4 playable, polar-axis globe drag, night-sky observatory)
 
 ---
 
@@ -8,9 +8,10 @@ Font strategy:
 Primary heading: Orbitron (Google Fonts) — tech/science feel
 Body/UI: Inter — readability
 Monospace accents: Courier Prime for data displays (mission IDs, checklist labels)
-Font loading: Google Fonts in index.html
+Font loading: Google Fonts in index.html; Phaser scenes wait on document.fonts before boot
 CSS variables: --font-heading, --font-body, --font-mono
 Hierarchy: headings use Orbitron; body uses Inter; mission HUD uses Orbitron for titles
+In-mission text: Phaser Text uses the same CSS families at 2–3× resolution so canvas type matches DOM (landing / map) crispness. Orbitron HUD labels are weight 700.
 
 2. Color palette
 Dark theme (default):
@@ -27,12 +28,13 @@ Accent: shiny gold #ffcc00
 Galaxy violet #7b2ff7 used in type gradients
 Shiny gradient type on landing headings (gold → orange → red → violet)
 Star sprinkles on white with soft color accents
-Landing hero: cosmos-hero.png (kids + rocket amid Earth, solar system, galaxies, nebulae). Mission Map vignettes: missions/mission-01…10.png (same cast, themed per concept). Mission 1 globe: earth-bright.png.
+Landing hero: cosmos-hero.png (kids + rocket amid Earth, solar system, galaxies, nebulae). Mission Map vignettes: missions/mission-01…10.png (same cast, themed per concept). Mission 1 globe: NASA equirectangular Earth (earth-equirectangular.jpg) on a 3D sphere.
 
 Accessibility:
 WCAG contrast on body text
 44px minimum tap targets
 prefers-reduced-motion disables star twinkle
+Mission 4 (night sky) always uses the dark palette even if the app theme is Bright — observatory chrome stays night.
 
 3. App surfaces & layout
 Marketing landing (#landing) — public entry:
@@ -44,34 +46,69 @@ Nav: Cadets / Missions scroll in-page; no About; Launch enters game
 
 Game shell (diegetic):
 Home: cosmic Mission Map trail — zigzag stops with circular vignette art per mission (kids + rocket in that mission’s scene), title/concept/teaser, badge status
+Unlock: Mission 1 always open; later stops unlock when the previous mission is complete (locked stops are not tappable)
 Profile: Cadet ID card + badges
-Settings: theme toggle + accessibility controls (TTS/subtitles/volume UI)
+Settings: theme toggle + accessibility controls (TTS/subtitles/volume UI present; not fully wired)
 Onboarding: Cadet Registration (from Launch when no profile)
 
 4. Diegetic HUD
 Panel frames, glowing borders, Orbitron labels
 Mission Map: illustrated trail stops (not plain numbered orbs)
-Mission HUD: objective text, Pause, Hint
+Mission HUD: objective text only. Pause is deferred (code kept, not shown). Hint is removed from every mission — teaching lives in the visuals, objective line, and lock-in feedback.
 
 5. Theme toggle
 Landing header + Settings
 Persists as localStorage cosmic-cadets-theme (dark | light)
 data-theme on <html>; early FOUC script in index.html
+Missions 1–3 follow the app theme. Mission 4 locks night-sky chrome.
 
-6. Mission 1 UX (Earth’s Rotation) — redesigned July 15, 2026
+6. Mission 1 UX (Earth’s Rotation)
 Teaching model (must stay obvious):
 - Sun is FIXED on the right; rays point at Earth
 - RIGHT half of the globe = DAY; LEFT half = NIGHT
-- Vertical “day/night line” (terminator) labeled
-- Cities ride ON the spinning globe (pins rotate with the planet)
-- Side “CITY CHECKLIST” shows Need vs Now for New York / Delhi / Nairobi
+- Vertical terminator is drawn; DAY / NIGHT sit on the halves (no extra “current state” legends)
+- Earth is a textured 3D sphere that turns around its north–south polar axis
+- Horizontal drag follows the finger: drag right → continents on the front move right (like spinning a real globe)
+- Vertical drag does not tip Earth off the polar axis
+- Cities (New York, Delhi, Nairobi) stay on real latitudes and ride with the globe
+- Side “CITY CHECKLIST” shows Need vs Now
 - Progress “Correct: N / 3”
-- Fixed starting scramble (readable), not chaotic random
-- Hint text restates the right=day / left=night rule
+- Fixed starting pose (Asia-facing night), not chaotic random
+- Compact: globe centered, checklist stacked; wide: globe + panel side by side
 
-7. Responsive
-Tablet-first; landing collapses nav links on narrow widths; mission checklist + globe side-by-side on desktop, globe centered with panel on larger tablets
+7. Mission 2 UX (Moon Phases)
+- Space view: Earth at center, Sun light from the right, Moon dragged around its orbit
+- Orbit slider as a second control (left = New, opposite = Full)
+- “View from Earth” panel shows the live phase disc + kid-readable cue
+- Lock In Phase to score each match (5 phases: New, Waxing Crescent, First Quarter, Full, Waning Crescent)
+- Theme-aware chrome; Moon/Earth stay naturalistic
+- Compact: panels stack under the orbit; Lock In stays above the slider
 
-8. Motion
-Landing star twinkle (subtle); Mission Map nebula drift + star twinkle; theme color transition; mission success scale-in
-Reduce motion respected for map and landing star animations
+8. Mission 3 UX (Seasons & Axial Tilt) — Tilt + Orbit Lab
+- Space view: perspective orbit around a fixed Sun; drag Earth along the ellipse (cursor tracking, snaps to Dec / Mar / Jun / Sep)
+- Tilt slider 0–45° with a highlighted Earth-like band (~15–32°) and a 23.5° tick
+- Axis stays parallel through the year: N leans right so December (Earth right of Sun) = North Pole away from the Sun
+- Kid-friendly place cards (New York / Delhi / Sydney) update live: season, sun height, day length
+- Four Lock In scenarios (NH winter, NH summer, SH winter, SH summer)
+- Desktop: orbit + tilt sliders side by side with labels over each track; compact: stacked sliders
+- Same panel language and fonts as missions 1–2
+
+9. Mission 4 UX (Star Patterns) — night-sky observatory
+- Always dark: immersive starfield (Stellaris-like), no bright-theme wash
+- Six patterns: Orion, Ursa Major, Cassiopeia, Leo (New Delhi · March) and Crux, Scorpius (Cape Town · September)
+- Connect-the-dots on projected RA/Dec stars; Undo last line
+- After a correct pattern: overlay real constellation atlas art (PNG), reveal named stars — no depth/warp animation
+- Art + star spacing share a square frame so desktop and mobile stay proportionate
+- Then a “real vs scrambled” card pick; cycle all six then complete
+
+10. Responsive
+Tablet-first; landing collapses nav links on narrow widths
+Mission 1: checklist + globe side-by-side on desktop, globe centered with panel on phones
+Missions 2–3: reflow panels and controls on resize (Phaser RESIZE)
+Mission 4: square sky frame scales uniformly
+
+11. Motion
+Landing star twinkle (subtle); Mission Map nebula drift + star twinkle; theme color transition
+Mission success: short fade-in (no scale-pop that warps type)
+Mission 4: no post-complete mesh distortion
+Reduce motion respected for map, landing stars, and Mission 4 extras

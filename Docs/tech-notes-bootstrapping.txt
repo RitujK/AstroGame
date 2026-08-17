@@ -1,5 +1,5 @@
 Cosmic Cadets - Technical Notes
-Updated: July 15, 2026 (landing, themes, cosmic Mission Map, Mission 1 redesign)
+Updated: August 12, 2026 (missions 1–4 playable; globe/orbit drag follows cursor)
 
 Scope completed
 - Vite + TypeScript app in game/; Phaser 3 for missions.
@@ -7,9 +7,14 @@ Scope completed
 - Marketing landing page with cosmos hero art and Launch → game-start CTA.
 - Dark / Bright theme system (tokens + data-theme + localStorage).
 - Cosmic Mission Map trail with per-mission vignette art + shared catalog (`data/missions.ts`).
-- Onboarding, profile/save, feedback modal, age-band engine.
-- Mission 1: Earth’s Rotation — clarified day/night UX (side checklist, fixed Sun, cities on globe).
-- Mission 2: Moon Phases (implemented); Missions 3–10 stubs.
+- Sequential unlock: Mission 1 always open; N+1 unlocks when N is complete.
+- Onboarding, profile/save, feedback modal, age-band engine (age is stored; missions do not branch on band).
+- Mission 1: Earth’s Rotation — 3D textured globe, polar-axis drag, city checklist.
+- Mission 2: Moon Phases — orbit drag + slider + Lock In (5 phases).
+- Mission 3: Seasons & Axial Tilt — orbit + tilt lab, place cards, 4 scenarios.
+- Mission 4: Star Patterns — 6 constellations, connect-the-dots, atlas art overlays.
+- Missions 5–10: catalog + map stops; in-mission view is “Coming Soon”.
+- In-mission Hint removed; Pause HUD deferred.
 
 Stack
 - Vite 7, TypeScript 5, Phaser 3, vite-plugin-pwa (installed, not fully configured).
@@ -22,54 +27,99 @@ Local development (from game/)
   - http://localhost:5173/#landing (default entry)
   - http://localhost:5173/#onboarding
   - http://localhost:5173/#home
-  - http://localhost:5173/#mission?id=1
+  - http://localhost:5173/#mission?id=1  (also id=2, 3, 4)
 
 Entry & routing
 - Empty / unknown hash → #landing (replaceState cleans bad fragments).
 - navigate() uses history.pushState + popstate/hashchange coalesce (Safari-friendly).
 - Launch Mission: no profile → onboarding; has profile → home.
 - Profile guard in main.ts; PUBLIC_ROUTES = landing, onboarding.
+- Mission view: locked ids bounce to #home; unknown/unimplemented ids show Coming Soon.
 
 Theme
 - services/theme.ts — getTheme / setTheme / toggleTheme / initTheme
 - Key: cosmic-cadets-theme
 - tokens.css :root dark; [data-theme="light"] bright white + orange/red/gold accents
 - components/themeToggle.ts — shared toggle UI
+- Phaser scenes read getMissionPalette() and listen for themechange
+- Mission 4 calls lockNightPalette() so the observatory stays dark regardless of app theme
+
+Phaser boot & type
+- createMissionGame sizes from #phaser-container (not window) so the canvas matches the diegetic chrome
+- scale mode RESIZE + autoRound; render.antialias + roundPixels
+- Views wait on ensureMissionFontsReady() (Inter / Orbitron / Courier Prime) before booting
+- BaseMissionScene.addText() maps fontFamily to CSS --font-* and uses 2–3× text resolution
 
 Project structure (highlights)
 - game/public/assets/images/
   - cosmos-hero.png — landing hero (kids, rocket, cosmos)
   - missions/mission-01.png … mission-10.png — Mission Map vignettes
-  - earth-bright.png — Mission 1 interactive globe
-  - earth.png — legacy stylized Earth (unused on landing)
-- game/src/data/missions.ts — titles, concepts, teasers, art paths
+  - earth-equirectangular.jpg — Mission 1 / 3 sphere texture (NASA Blue Marble)
+  - earth-bright.png — unused by current 3D globe (kept as fallback/reference)
+  - earth.png — legacy stylized Earth
+  - constellations/{orion,ursa-major,cassiopeia,leo,crux,scorpius}.png — Mission 4 atlas overlays
+- game/src/data/missions.ts — titles, concepts, teasers, art paths, unlock helper
 - game/src/views/home.ts — cosmic Mission Map trail
+- game/src/views/mission.ts — loader map (1–4 scenes; 5–10 stub)
 - game/src/styles/missionMap.css
 - game/src/views/landing.ts
 - game/src/styles/landing.css
 - game/src/services/theme.ts
-- game/src/engine/scenes/Mission01.ts — day/night teaching scene
+- game/src/engine/phaserBoot.ts
+- game/src/engine/scenes/BaseMissionScene.ts
+- game/src/engine/scenes/Mission01.ts — day/night sphere
 - game/src/engine/scenes/Mission02.ts — moon phases
+- game/src/engine/scenes/Mission03.ts — tilt + orbit lab
+- game/src/engine/scenes/Mission04.ts — star cartographer
+- game/src/engine/data/constellations.ts — RA/Dec catalog + Delhi / Cape Town projections
 
 Mission Map notes
 - Alternating left/right stops along a glowing center spine; circular art frames.
-- Progress (completed / best score) read from save; all stops remain launchable (3–10 stub).
+- Progress (completed / best score) read from save.
+- Locked stops render as non-buttons with “Complete Mission NN to unlock”.
+- Missions 5–10 remain launchable only after prior completion, then show Coming Soon.
 
 Mission 1 technical notes
-- Loads `earth-bright.png` as the globe; procedural texture is fallback only.
-- Day = cos(worldAngle) > threshold (Sun along +X / right).
-- City pins are children of the rotating globe container.
-- Checklist UI is fixed in screen space.
-- Completion requires player interaction then all three targets matched.
+- Texture: earth-equirectangular.jpg on a UV sphere Mesh; procedural canvas fallback if load fails.
+- Rotation: horizontal pointer delta subtracts from globeRotation so the front face follows the cursor.
+- Mesh: modelRotation.y = −globeRotation; geometry + mirrored UVs keep east on screen-right.
+- Cities: lat/lon orthographic projection; pins hide on the far hemisphere.
+- Day = sunward X of the city > threshold (Sun along +X / right).
+- Checklist is screen-space; completion requires interaction then all three targets matched.
+- Success copy fades in (no scale tween).
+
+Mission 2 technical notes
+- Moon angle from orbit drag (atan2 around Earth) or from the year-style slider (0–360).
+- Phase disc lighting from the +X sun; “view from Earth” panel mirrors the same angle.
+- Lock In compares angle to the challenge target within tolerance, then advances.
+
+Mission 3 technical notes
+- Orbit angle: 0° = December (Earth right of Sun), 180° = June (Earth left). Drag uses pointer polar angle around the Sun (ellipse-normalized); release snaps to 90° stops. Month chips set the same angles.
+- Tilt: continuous 0–45°; lock requires ~15–32° (Earth-like).
+- Season model: nhScore = −cos(orbitAngle) * tiltStrength so Dec = NH winter, Jun = NH summer; SH is the negation.
+- Visual axis: axisAngle = −π/2 + lean so the N tip leans right (Dec = away from Sun, Jun = toward). Axis stays parallel around the orbit.
+- Earth is the same sphere mesh; auto-spin on Y is decorative only.
+- Single pointermove / pointerup handles globe, orbit slider, and tilt slider.
+
+Mission 4 technical notes
+- Catalog projects J2000 RA/Dec into a unit square for New Delhi · March (northern) and Cape Town · September (southern).
+- Six definitions: orion, ursa-major, cassiopeia, leo, crux, scorpius.
+- Tracing: click stars to add undirected edges; match the definition’s edge set.
+- On success: show atlas PNG with per-constellation placement (Scorpius uses head→stinger axis fit). Square frame so stars and art scale together on desktop/mobile.
+- No post-complete depth animation (it warped shapes). No nebula ellipses (they read as ovals).
+- Star names appear after the pattern is complete.
 
 Known limitations
-- Missions 3–10 stubs.
-- Accessibility TTS/subtitles UI not fully wired.
-- PWA not configured.
-- Audio system pending.
-- Mission 1 globe is schematic (not real lat/lon GIS).
+- Missions 5–10 stubs.
+- Accessibility TTS / subtitles / volume UI not persisted or wired into missions.
+- PWA plugin not configured.
+- Audio / soundtrack pending.
+- Nova is copy on the landing only — no in-mission character or VO.
+- No mid-mission autosave (progress saves on complete).
+- Age bands do not change mission logic (one shared interaction model).
+- Mission 1 lat/lon is educational, not GIS-grade.
 
 Next focus
-- Fine-tune mission UX/visuals (Mission 1 started July 15, 2026).
-- Remaining missions 3–10.
+- Missions 5–10.
 - Wire accessibility + audio + PWA.
+- Optional: Nova in-mission prompts, mid-mission save.
