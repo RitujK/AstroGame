@@ -1,5 +1,5 @@
 UI/UX design system — Cosmic Cadets
-Updated: August 12, 2026 (missions 1–4 playable, polar-axis globe drag, night-sky observatory)
+Updated: August 17, 2026 (Mission 5 Solar System Tour shipped)
 
 ---
 
@@ -11,7 +11,7 @@ Monospace accents: Courier Prime for data displays (mission IDs, checklist label
 Font loading: Google Fonts in index.html; Phaser scenes wait on document.fonts before boot
 CSS variables: --font-heading, --font-body, --font-mono
 Hierarchy: headings use Orbitron; body uses Inter; mission HUD uses Orbitron for titles
-In-mission text: Phaser Text uses the same CSS families at 2–3× resolution so canvas type matches DOM (landing / map) crispness. Orbitron HUD labels are weight 700.
+In-mission text: Phaser Text uses the same CSS families with device-pixel-ratio supersampling (2–4×) so canvas type matches DOM (landing / map) crispness. Orbitron HUD labels are weight 700. Scenes place text on integer coordinates; Phaser roundPixels is off so supersampled glyph edges stay smooth.
 
 2. Color palette
 Dark theme (default):
@@ -101,14 +101,22 @@ Teaching model (must stay obvious):
 - Art + star spacing share a square frame so desktop and mobile stay proportionate
 - Then a “real vs scrambled” card pick; cycle all six then complete
 
-10. Responsive
+10. Mission 5 UX (Solar System Tour)
+- Phase 1 — Assemble: Sun at center, eight perspective orbit rings, scrambled planet dock at the bottom. Drag each world onto a ring (snap to nearest). Rings tint green when correct, alert when wrong. Lock In Order when all eight match Mercury→Neptune. Mnemonic cue: “My Very Educated Mother Just Served Us Noodles.”
+- Phase 2 — Scan: keep the lined-up system revolving as a rigid formation. The scan target sentence lives in the same bottom band the dock occupied (not the header), so attention stays where earlier interactions were. Unscanned feature worlds pulse with a breathing ring, sonar pulse, and scanner bracket ticks; already-scanned worlds drop the highlight. Tap the matching world → cinematic close-up + fact card + Continue in that same bottom panel. Five scans (Mercury, Earth, Mars, Jupiter, Saturn).
+- Rendering: textured 3D spheres with procedural surfaces (Earth uses NASA Blue Marble), Sun-lit atmosphere/terminator, Saturn rings split behind/in front, nebula + starfield backdrop.
+- Kid-scale planet sizes (not true scale). Theme-aware chrome like missions 1–3. Compact layouts hide orbit name labels (keep dock + hero labels) so eight names don’t collide.
+
+11. Responsive
 Tablet-first; landing collapses nav links on narrow widths
 Mission 1: checklist + globe side-by-side on desktop, globe centered with panel on phones
 Missions 2–3: reflow panels and controls on resize (Phaser RESIZE)
 Mission 4: square sky frame scales uniformly
+Mission 5: header stacks from measured text heights with one shared glyph inset; orbit plane tilt opens steeper on portrait phones (~38°) and stays flatter on desktop (~26°) so rings stay selectable; scan controls reserve a real bottom band
 
-11. Motion
+12. Motion
 Landing star twinkle (subtle); Mission Map nebula drift + star twinkle; theme color transition
 Mission success: short fade-in (no scale-pop that warps type)
 Mission 4: no post-complete mesh distortion
-Reduce motion respected for map, landing stars, and Mission 4 extras
+Mission 5: rigid golden-angle orbital formation (no planet-on-planet overlap while revolving); scan-target pulse + cinematic sweep; hero return ease after each scan
+Reduce motion respected for map, landing stars, Mission 4 extras, and Mission 5 drift/pulse/twinkle

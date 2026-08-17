@@ -127,7 +127,7 @@ The mission progression is redesigned for a more logical learning curve.
 | **2** | Moon Phases | Phases of the Moon | Drag the Moon in orbit around the Earth; use a slider to match the requested phase. | Match 5 phases (e.g., Crescent, Gibbous, Full). |
 | **3** | Seasons & Axial Tilt | Earth's Tilt | Use a tilt slider and an orbit knob to set the correct season for a given hemisphere. | Solve 4 scenarios (e.g., "Make it winter in the Northern Hemisphere"). |
 | **4** | Star Patterns | Constellations | Connect-the-dots on a starfield; distinguish real patterns from scrambled ones. | Recreate 3 major constellations (e.g., Orion, Ursa Major). |
-| **5** | Solar System Tour | Order & Features | Drag planets to their correct orbits. Then, tap/drag to "scan" iconic features on each. | Get the correct planet order + scan 4-5 features (e.g., Saturn's rings). |
+| **5** | Solar System Tour | Order & Features | Drag planets onto orbits, then tap glowing scan targets in a bottom readout to scan iconic features. | Lock correct order Mercury→Neptune + scan 5 features (Mercury, Earth, Mars, Jupiter, Saturn). |
 | **6** | Gravity Golf | Gravity & Orbits | "Mini-golf" in space. Set the launch angle/power to get a probe into a stable orbit. | Maintain a stable orbit for 10 seconds around two different planets. |
 | **7** | Shadow Play | Eclipses | Drag the Sun, Earth, and Moon into alignment to create solar and lunar eclipses. | Create one of each eclipse type and label the umbra/penumbra. |
 | **8** | Cosmic Sorting | Small Bodies | Sort falling objects into bins: Asteroids, Comets, Meteoroids. | Correctly sort 12 objects and see where they originate from (Asteroid Belt, Oort Cloud). |
@@ -141,6 +141,12 @@ The mission progression is redesigned for a more logical learning curve.
 * Teaching must stay visible at all times: labeled DAY / NIGHT halves, labeled day/night line, and Sun with “light comes from here.”
 * Do **not** rely on unexplained random chaos — use a controlled start pose and a readable checklist.
 * City pins rotate with the Earth so the spatial model matches the mental model.
+
+#### **6.5 Mission 5 UX rules (shipped)**
+
+* Phase 1 assemble uses a bottom planet dock; Phase 2 scan keeps the target sentence and fact card in that same bottom band so attention does not jump to the header mid-mission.
+* Unscanned feature worlds show a simple highlight (breathing ring + pulse + brackets); already-scanned worlds drop the highlight without naming the answer.
+* Revolving planets keep a rigid golden-angle spacing so worlds do not stack on top of each other while the player is tapping.
 
 ---
 
@@ -165,7 +171,7 @@ The game will be built for everyone.
 ### ## 8. Art, Audio & Motivation
 
 * **Art Style:** A cozy and playful high-contrast 2D aesthetic. Lots of fun particle effects like stardust. Nova will have expressive animations.
-* **Landing visual language:** Orbitron headings, Inter body; dark theme teal/cyan/amber; bright theme white ground + shiny gold/orange/red/violet type. Hero image: `cosmos-hero.png` (adventure cosmos + smiling cadets). Mission Map: circular vignettes of the same kids/rocket cast into each mission’s scene (`missions/mission-XX.png`). Mission 1 globe: `earth-bright.png`. Both themes: subtle starfield.
+* **Landing visual language:** Orbitron headings, Inter body; dark theme teal/cyan/amber; bright theme white ground + shiny gold/orange/red/violet type. Hero image: `cosmos-hero.png` (adventure cosmos + smiling cadets). Mission Map: circular vignettes of the same kids/rocket cast into each mission’s scene (`missions/mission-XX.png`). Mission 1 / 3 / 5 Earth: `earth-equirectangular.jpg` on a 3D sphere. Both themes: subtle starfield.
 * **Themes:** Players can switch **Dark** (deep space + teal star glow) and **Bright** (clean white ground with star sprinkles; shiny yellow / orange / red / violet type accents). Preference persists in `localStorage` (`cosmic-cadets-theme`) and applies app-wide. Dark is the default.
 * **Audio:** A chill, ambient space music soundtrack with soft, satisfying chimes for success and gentle cues for errors.
 * **Collectibles:** Motivation is driven by earning a unique **badge** for each mission, a **"Grand Cadet" trophy** for completing all 10, and filling out a collectible **constellation sticker book**.

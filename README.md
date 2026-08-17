@@ -27,7 +27,7 @@ Other routes:
 
 - `#onboarding` — Cadet Registration
 - `#home` — Mission Map
-- `#mission?id=1` — Mission 1
+- `#mission?id=1` — Mission 1 (also `id=2` … `5` for shipped missions)
 
 Build for production:
 

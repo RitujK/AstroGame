@@ -1,5 +1,5 @@
 Cosmic Cadets - Technical Notes
-Updated: August 12, 2026 (missions 1–4 playable; globe/orbit drag follows cursor)
+Updated: August 17, 2026 (Mission 5 Solar System Tour shipped)
 
 Scope completed
 - Vite + TypeScript app in game/; Phaser 3 for missions.
@@ -13,7 +13,8 @@ Scope completed
 - Mission 2: Moon Phases — orbit drag + slider + Lock In (5 phases).
 - Mission 3: Seasons & Axial Tilt — orbit + tilt lab, place cards, 4 scenarios.
 - Mission 4: Star Patterns — 6 constellations, connect-the-dots, atlas art overlays.
-- Missions 5–10: catalog + map stops; in-mission view is “Coming Soon”.
+- Mission 5: Solar System Tour — assemble eight worlds, then scan 5 iconic features with cinematic close-ups.
+- Missions 6–10: catalog + map stops; in-mission view is “Coming Soon”.
 - In-mission Hint removed; Pause HUD deferred.
 
 Stack
@@ -23,11 +24,12 @@ Local development (from game/)
 - npm install
 - npm run dev
 - npm run build / npm run preview
+- Optional: node scripts/check-orbit-spacing.mjs — measures Mission 5 on-screen planet gaps across viewports
 - URLs:
   - http://localhost:5173/#landing (default entry)
   - http://localhost:5173/#onboarding
   - http://localhost:5173/#home
-  - http://localhost:5173/#mission?id=1  (also id=2, 3, 4)
+  - http://localhost:5173/#mission?id=1  (also id=2 … 5)
 
 Entry & routing
 - Empty / unknown hash → #landing (replaceState cleans bad fragments).
@@ -46,21 +48,22 @@ Theme
 
 Phaser boot & type
 - createMissionGame sizes from #phaser-container (not window) so the canvas matches the diegetic chrome
-- scale mode RESIZE + autoRound; render.antialias + roundPixels
+- scale mode RESIZE + autoRound; render.antialias on, roundPixels off (integer text positions instead)
 - Views wait on ensureMissionFontsReady() (Inter / Orbitron / Courier Prime) before booting
-- BaseMissionScene.addText() maps fontFamily to CSS --font-* and uses 2–3× text resolution
+- BaseMissionScene.addText() maps fontFamily to CSS --font-* and supersamples at ~2× devicePixelRatio (capped 2–4)
 
 Project structure (highlights)
 - game/public/assets/images/
   - cosmos-hero.png — landing hero (kids, rocket, cosmos)
   - missions/mission-01.png … mission-10.png — Mission Map vignettes
-  - earth-equirectangular.jpg — Mission 1 / 3 sphere texture (NASA Blue Marble)
+  - earth-equirectangular.jpg — Mission 1 / 3 / 5 Earth sphere texture (NASA Blue Marble)
   - earth-bright.png — unused by current 3D globe (kept as fallback/reference)
   - earth.png — legacy stylized Earth
   - constellations/{orion,ursa-major,cassiopeia,leo,crux,scorpius}.png — Mission 4 atlas overlays
+- game/scripts/check-orbit-spacing.mjs — Mission 5 formation spacing checker
 - game/src/data/missions.ts — titles, concepts, teasers, art paths, unlock helper
 - game/src/views/home.ts — cosmic Mission Map trail
-- game/src/views/mission.ts — loader map (1–4 scenes; 5–10 stub)
+- game/src/views/mission.ts — loader map (1–5 scenes; 6–10 stub)
 - game/src/styles/missionMap.css
 - game/src/views/landing.ts
 - game/src/styles/landing.css
@@ -71,13 +74,15 @@ Project structure (highlights)
 - game/src/engine/scenes/Mission02.ts — moon phases
 - game/src/engine/scenes/Mission03.ts — tilt + orbit lab
 - game/src/engine/scenes/Mission04.ts — star cartographer
+- game/src/engine/scenes/Mission05.ts — solar system tour
 - game/src/engine/data/constellations.ts — RA/Dec catalog + Delhi / Cape Town projections
+- game/src/engine/data/planets.ts — eight planets + visual recipes + scan features
 
 Mission Map notes
 - Alternating left/right stops along a glowing center spine; circular art frames.
 - Progress (completed / best score) read from save.
 - Locked stops render as non-buttons with “Complete Mission NN to unlock”.
-- Missions 5–10 remain launchable only after prior completion, then show Coming Soon.
+- Missions 6–10 remain launchable only after prior completion, then show Coming Soon.
 
 Mission 1 technical notes
 - Texture: earth-equirectangular.jpg on a UV sphere Mesh; procedural canvas fallback if load fails.
@@ -109,8 +114,19 @@ Mission 4 technical notes
 - No post-complete depth animation (it warped shapes). No nebula ellipses (they read as ovals).
 - Star names appear after the pattern is complete.
 
+Mission 5 technical notes
+- Data: `engine/data/planets.ts` — Mercury→Neptune with kid-scale radii, `PlanetVisual` recipes (bands/craters/caps/grain/spots/rings/spin), five scan features (Mercury, Earth, Mars, Jupiter, Saturn).
+- Phase 1 (assemble): scrambled dock; drag onto concentric orbits; release snaps to nearest ring; Lock In when all eight match order 0…7.
+- Phase 2 (scan): bottom-bar target readout (same band as the dock); unscanned feature worlds get pulse + bracket highlights; tap match → cinematic close-up (vignette, reticle, sweep) + fact card + Continue in that bar. Header shrinks to objective + counter during the tour.
+- Rendering: each planet is a sphere Mesh with an equirectangular surface baked at runtime (Earth uses earth-equirectangular.jpg). Nebula baked at 1024×576.
+- Lighting per frame from the Sun: atmosphere halo, graded terminator + sunward rim. Far-side worlds occluded by the corona skip shading.
+- Saturn rings: tilted squashed ellipse, behind/in-front layers, Cassini gap.
+- Formation: shared `systemPhase` + golden-angle step per slot (`FORMATION_STEP`) so relative spacing never collapses while revolving. Tap hit circles are depth-sorted; compact layouts use tighter grab padding. Spacing verified via `scripts/check-orbit-spacing.mjs`.
+- Orbit depth is adaptive: portrait phones open the plane (ORBIT_DEPTH_RANGE.compact ~0.42–0.62); desktop stays flatter (wide ~0.34–0.44). Header stacks from measured text heights with one glyph inset.
+- Theme-aware chrome; reduced-motion disables formation drift, scan pulse, and star twinkle.
+
 Known limitations
-- Missions 5–10 stubs.
+- Missions 6–10 stubs.
 - Accessibility TTS / subtitles / volume UI not persisted or wired into missions.
 - PWA plugin not configured.
 - Audio / soundtrack pending.
@@ -118,8 +134,11 @@ Known limitations
 - No mid-mission autosave (progress saves on complete).
 - Age bands do not change mission logic (one shared interaction model).
 - Mission 1 lat/lon is educational, not GIS-grade.
+- Game canvas still renders at 1× CSS pixels; high-DPI sharpness is capped until a DPR-aware Phaser zoom pass retunes all mission layouts.
+- Landscape phones leave Mission 5 nearly flat; Venus/Jupiter tap circles can graze at the worst phase (front world still wins via depth sort).
 
 Next focus
-- Missions 5–10.
+- Missions 6–10.
+- Optional DPR canvas rendering for sharper mission text.
 - Wire accessibility + audio + PWA.
 - Optional: Nova in-mission prompts, mid-mission save.

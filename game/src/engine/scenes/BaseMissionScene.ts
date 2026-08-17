@@ -98,9 +98,9 @@ export abstract class BaseMissionScene extends Phaser.Scene {
       : {};
 
     return this.add.text(x, y, text, {
-      // Phaser text is rasterized to a texture. Use a higher integer resolution
-      // than the game canvas so it matches the crisp DOM typography.
-      resolution: Math.min(3, Math.max(2, Math.ceil((window.devicePixelRatio || 1) * 1.5))),
+      // Phaser text is rasterized to a texture. Supersample it well past the
+      // canvas resolution so glyphs downsample smoothly instead of stair-stepping.
+      resolution: Math.min(4, Math.max(2, Math.ceil((window.devicePixelRatio || 1) * 2))),
       ...typographyDefaults,
       ...style,
       fontFamily,

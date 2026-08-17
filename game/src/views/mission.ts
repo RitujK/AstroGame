@@ -86,6 +86,11 @@ export function renderMission(container: HTMLElement, route: Route): void {
         defaultScene: 'Mission04',
         SceneClass: m.Mission04Scene,
       })),
+    5: () =>
+      import('../engine/scenes/Mission05').then((m) => ({
+        defaultScene: 'Mission05',
+        SceneClass: m.Mission05Scene,
+      })),
   };
 
   const loader = missionLoaders[id];

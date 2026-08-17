@@ -32,7 +32,10 @@ export function createMissionGame(
     backgroundColor: getMissionPalette().background,
     render: {
       antialias: true,
-      roundPixels: true,
+      // roundPixels snaps texture sampling to whole pixels, which hardens the
+      // edges of supersampled text into visible stair-steps. Text is positioned
+      // on integer coordinates by the scenes instead.
+      roundPixels: false,
     },
     scale: {
       mode: Phaser.Scale.RESIZE,
